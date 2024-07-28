@@ -1,0 +1,301 @@
+import java.awt.print.Book;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class UserDetails {
+    File BookList = new File("BookList.csv");
+    Scanner scanner = new Scanner(System.in);
+    String bookLine;
+
+    public void burrowBook(String email) {
+        System.out.println("Enter the ISBN number of the book you want:");
+        String ISBN = scanner.nextLine();
+        List<String> readLines = new ArrayList<>();
+
+        try {
+            Scanner fileScanner = new Scanner(BookList);
+
+            while (fileScanner.hasNextLine()) {
+                bookLine = fileScanner.nextLine();
+                String[] bookLines = bookLine.split(",");
+
+                if (bookLines[2].equals(ISBN) && bookLines[4].equals("true")) {
+                    System.out.println("Email: " + email);
+                    bookLines[4]= "false";
+                    bookLine = String.join(",", bookLines);
+
+                    FileWriter bookBorrow = new FileWriter("userTrackBooks.csv", true);
+                    bookBorrow.append(ISBN);
+                    bookBorrow.append(",");
+                    bookBorrow.append(email);
+                    bookBorrow.append("\n");
+                    bookBorrow.flush();
+                    bookBorrow.close();
+
+                    System.out.println("You have borrowed the book. Don't lose it!");
+                }
+                readLines.add(bookLine);
+            }
+
+            fileScanner.close();
+
+            // Now that we've finished reading from the file, let's write to it
+            FileWriter writer = new FileWriter(BookList, false); // Use FileWriter instead of PrintWriter
+            for (String readLine : readLines) {
+                writer.write(readLine + "\n");
+            }
+            writer.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error 404");
+        } catch (IOException e) {
+            System.out.println("Your input is wrong.");
+        }
+    }
+
+
+    public void returnBook(String email) {
+        List<String> readLines = new ArrayList<>();
+        List<String> userTrackBookLines = new ArrayList<>();
+
+
+        System.out.println("Enter the ISBN number: ");
+        String ISBN = scanner.nextLine();
+        File BookTracking = new File("userTrackBooks.csv");
+
+        try {
+            Scanner fileScanner = new Scanner(BookList);
+            Scanner userTrackBookScanner = new Scanner(BookTracking);
+
+            while (fileScanner.hasNextLine()) {
+                String bookLine = fileScanner.nextLine();
+                String[] bookLines = bookLine.split(",");
+                if (bookLines.length > 5 && bookLines[2].equals(ISBN) && bookLines[4].equals("false") && bookLines[5].equals(email)) {
+                    bookLine = bookLine.replace(",false" + email + ",", ",true,none");
+                    System.out.println("You have successfully returned the book.");
+
+                }
+                readLines.add(bookLine);
+            }
+            fileScanner.close();
+
+            while(userTrackBookScanner.hasNextLine()){
+                String trackUserLine = userTrackBookScanner.nextLine();
+                String [] trackUserLines = trackUserLine.split(",");
+                if(!trackUserLines[0].equals(ISBN)){
+                    userTrackBookLines.add(trackUserLine);
+                    //System.out.println("You have successfully returned the book.");
+                } //Coding garda gardai yo code k ko lagi lekheko thiye vanni nai birse, but is useful and i dunno why
+            }
+             userTrackBookScanner.close();
+
+            PrintWriter writer = new PrintWriter("BookList.csv");
+            for (String readLine : readLines) {
+                writer.println(readLine);
+            }
+
+            writer.close();
+
+            PrintWriter trackUserWrite = new PrintWriter("userTrackBooks.csv");
+            for (String trackUserBookLine : userTrackBookLines){
+                trackUserWrite.println(trackUserBookLine);
+            }
+            trackUserWrite.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error 404");
+        } catch (IOException e) {
+            System.out.println("Your input is wrong");
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Scanner fileScanner = new Scanner(BookList);
+
+            while (fileScanner.hasNextLine()) {
+                bookLine = fileScanner.nextLine();
+                String[] bookLines = bookLine.split(",");
+
+                if (bookLines[2].equals(ISBN) && bookLines[4].equals("true")) {
+                    System.out.println("Email: " + email);
+                    bookLine = bookLine.replace(",true,none", ",false" + email + ",");
+                    //Changed this line here to make the program read the ISBN and email in a separate .csv file
+
+                    FileWriter bookBorrow = new FileWriter("userTrackBooks.csv", true);
+                    bookBorrow.append(ISBN);
+                    bookBorrow.append(",");
+                    bookBorrow.append(email);
+                    bookBorrow.append("\n");
+                    bookBorrow.flush();
+                    bookBorrow.close();
+
+                    System.out.println("You have borrowed the book. Don't lose it!");
+                }
+                readLines.add(bookLine);
+
+                fileScanner.close();
+
+                PrintWriter writer = new PrintWriter(new FileWriter("BookList.csv", false));
+                for (String readLine : readLines) {
+                    writer.println(readLine);
+                }
+                writer.close();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.awt.print.Book;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+public class UserDetails {
+    File BookList = new File("BookList.csv");
+    Scanner scanner = new Scanner(System.in);
+    String bookLine;
+
+    public void burrowBook(String email) {
+
+        System.out.println("Enter the ISBN number of the book you want:");
+        String ISBN = scanner.nextLine();
+        List<String> readLines = new ArrayList<>();
+
+        try {
+            Scanner fileScanner = new Scanner(BookList);
+
+            while (fileScanner.hasNextLine()) {
+                bookLine = fileScanner.nextLine();
+                String[] bookLines = bookLine.split(",");
+
+                if (bookLines[2].equals(ISBN) && bookLines[4].equals("true")) {
+                    System.out.println("Email: " + email);
+                    bookLine = bookLine.replace(",true,none", ",false" + email + ",");
+                    //Changed this line here to make the program read the ISBN and email in a separate .csv file
+
+                    FileWriter bookBorrow = new FileWriter("userTrackBooks.csv", true);
+                    bookBorrow.append(ISBN);
+                    bookBorrow.append(",");
+                    bookBorrow.append(email);
+                    bookBorrow.append("\n");
+                    bookBorrow.flush();
+                    bookBorrow.close();
+
+                    System.out.println("You have borrowed the book. Don't lose it!");
+                }
+                readLines.add(bookLine);
+
+                fileScanner.close();
+
+                PrintWriter writer = new PrintWriter(new FileWriter("BookList.csv", false));
+                for (String readLine : readLines) {
+                    writer.println(readLine);
+                }
+                writer.close();
+
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error 404");
+        } catch (IOException e) {
+            System.out.println("Your input is wrong.")
+        }
+
+
+        public void returnBook (String email){
+            List<String> readLines = new ArrayList<>();
+
+            System.out.println("Enter the ISBN number: ");
+            String ISBN = scanner.nextLine();
+
+
+            try {
+                Scanner fileScanner = new Scanner(BookList);
+                while (fileScanner.hasNextLine()) {
+                    String bookLine = fileScanner.nextLine();
+                    String[] bookLines = bookLine.split(",");
+                    if (bookLines.length > 5 && bookLines[2].equals(ISBN) && bookLines[4].equals("false") && bookLines[5].equals(email)) {
+                        bookLine = bookLine.replace(",false" + email + ",", ",true,none");
+                        System.out.println("You have successfully returned the book.");
+                    }
+                    readLines.add(bookLine);
+                }
+                fileScanner.close();
+
+                PrintWriter writer = new PrintWriter("BookList.csv");
+                for (String readLine : readLines) {
+                    writer.println(readLine);
+                }
+                writer.close();
+
+            } catch (FileNotFoundException e) {
+                System.out.println("Error 404");
+            } catch (IOException e) {
+                System.out.println("Your input is wrong");
+            }
+
+
+        }
+
+    }
+}
